@@ -38,7 +38,7 @@ const IndexPage = () =>  {
   )
 }
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
-  store.dispatch(addCountFromServer())
+  await store.dispatch(addCountFromServer())
 })
 
 export default IndexPage

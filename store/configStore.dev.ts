@@ -5,7 +5,8 @@ import { createStore, applyMiddleware, compose, Store } from "redux"
 import { createLogger } from "redux-logger"
 import {  createRouterMiddleware, initialRouterState } from "connected-next-router";
 import createSagaMiddleware from "redux-saga"
-import { MakeStore, createWrapper } from "next-redux-wrapper";
+import { MakeStore, createWrapper } from "next-redux-wrapper"
+import createReduxWaitForMiddleware from 'redux-wait-for-action'
 import createRootReducer, { rootSaga, State } from "reducers"
 
 
@@ -19,6 +20,7 @@ const middleware = [
 
 const finalCreateStore = compose(
   applyMiddleware(...middleware),
+  applyMiddleware(createReduxWaitForMiddleware())
 );
 
 
