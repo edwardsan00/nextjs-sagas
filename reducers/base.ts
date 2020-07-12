@@ -1,18 +1,22 @@
 import produce from "immer"
 import { TakeableChannel } from "redux-saga"
+import { HYDRATE } from 'next-redux-wrapper'
 
 const Duck = require("extensible-duck").default;
 
+export type StoreName = 'counter'
+export type Status = "NEW" | "LOADING" | "READY" | "SAVING" | "SAVED" | "DELETED" | "ERROR" | "CANCEL" | "EDITING"
+
 export interface DuckTypes {
   selectors: Record<string, (state: any, ...args: any[]) => any>;
-  statuses: Record<string, string>;
+  statuses: Record<string, Status>;
   types: Record<string, TakeableChannel<unknown> & string>;
-  store: string;
+  store: StoreName;
   sagas: Record<string, (...args: any[]) => any>;
 }
 
 export interface DuckInitialState {
-  status: string;
+  status: Status;
   error: null;
 }
 
@@ -20,7 +24,7 @@ export type Types = Record<string, any>;
 
 export interface Args {
   namespace: string;
-  store: string;
+  store: StoreName;
   initialState: Record<string, any>;
   creators?: Function;
   selectors?: Function;
@@ -87,6 +91,11 @@ export default function createDuck({
     reducer: (state: Types, action: Types, { types, statuses }: DuckTypes) => {
       return produce(state, (draft) => {
         switch (action.type) {
+          case HYDRATE:
+            for (let key in action.payload) draft[key] = action.payload[key]
+            
+            return;
+
           case types.UPDATE:
             if (draft.status !== statuses.EDITING)
               draft.status = statuses.EDITING;

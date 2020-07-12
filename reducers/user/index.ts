@@ -1,12 +1,19 @@
 import produce from "immer";
 
 import base, { DuckInitialState, DuckTypes } from "reducers/base";
-import { addCountFromServer, watchCountServer } from "./saga"
+import { takeEvery } from 'redux-saga/effects'
+import { addCountFromServer } from "./saga"
+import { HYDRATE } from 'next-redux-wrapper'
+import { State } from "reducers"
 
-import { State } from "reducers";
+interface User {
+  id: number,
+  name: string
+}
 
 export type Counter = DuckInitialState & {
   count: number;
+  users: Array<User>
 };
 
 export type CounterAction = {
@@ -18,7 +25,8 @@ export default base({
   namespace: "crassa",
   store: "counter",
   initialState: {
-    count: 0,
+    count: 1,
+    users: [],
   },
 }).extend({
   types: ["ADD_COUNT", "REMOVE_COUNT"],
@@ -49,5 +57,7 @@ export default base({
   sagas: (duck: DuckTypes) => ({
     addCountFromServer: addCountFromServer(duck),
   }),
-  takes: (duck: DuckTypes) => [watchCountServer(duck)],
+  takes: ({ types, sagas }: DuckTypes) => ([
+    takeEvery(types.FETCH, sagas.addCountFromServer),
+  ])
 });

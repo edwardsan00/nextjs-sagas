@@ -8,3 +8,16 @@ export type User = {
   id: number
   name: string
 }
+
+
+// export interface Statuses {
+//   NEW: "NEW",
+//   LOADING: "LOADING",
+//   READY: "READY",
+//   SAVING: "SAVING",
+//   SAVED: "SAVED",
+//   DELETED: "DELETED",
+//   ERROR: "ERROR",
+//   CANCEL: "CANCEL",
+//   EDITING: "EDITING",
+// }

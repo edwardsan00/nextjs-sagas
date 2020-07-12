@@ -1,13 +1,7 @@
 import { combineReducers } from "redux";
 import { all } from "redux-saga/effects";
 import { routerReducer } from 'connected-next-router'
-// import {
-//   connectRouter,
-//   RouterState,
-//   LocationChangeAction,
-// } from "connected-react-router";
-
-import counter from "./user"
+import counter, { Counter } from "./user"
 
 export type LocationState = {
   href: string;
@@ -23,21 +17,15 @@ export type RouterState = {
   action: RouterAction;
 }
 
-export interface State {
+export type State = Readonly<{
   router: RouterState;
-  [propName: string]: any;
-}
-
-
-// export interface State {
-//   router: Reducer<RouterState, LocationChangeAction>;
-//   [propName: string]: any;
-// }
+  counter: Counter
+}>;
 
 export default () =>
-  combineReducers({
+  combineReducers<State>({
     router: routerReducer,
-    [counter.store]: counter.reducer,
+    counter: counter.reducer,
   });
 
 export function* rootSaga() {

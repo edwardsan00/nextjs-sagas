@@ -1,17 +1,18 @@
-import { select, call, put, take, fork } from "redux-saga/effects";
+import { call, put, take, fork } from "redux-saga/effects";
 import { DuckTypes } from "../base";
 
 import { Get } from "utils/request"
 
-export const addCountFromServer = ({ types, selectors }: DuckTypes) =>
+export const addCountFromServer = ({ types }: DuckTypes) =>
   function* () {
     try {
         yield put({ type: types.FETCH_PENDING });
         const payload = yield call(Get, "users");
-        console.log("payload", payload)
-
         yield put({
           type: types.FETCH_FULFILLED,
+          payload: {
+            users: payload
+          }
         });
     } catch (e) {
       const {

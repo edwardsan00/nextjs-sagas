@@ -1,7 +1,7 @@
 import { AppContext } from "next/app"
 import Router from "next/router"
 import { format } from "url"
-import { createStore, applyMiddleware, compose } from "redux"
+import { createStore, applyMiddleware, compose, Store } from "redux"
 import { createLogger } from "redux-logger"
 import {  createRouterMiddleware, initialRouterState } from "connected-next-router";
 import createSagaMiddleware from "redux-saga"
@@ -22,7 +22,7 @@ const finalCreateStore = compose(
 );
 
 
-export const initStore: MakeStore<State> = (context) => {
+export const initStore: MakeStore<State> = (context): Store<State>  => {
   const { asPath, pathname, query } = (context as AppContext).ctx || Router.router || {};
   let initialState
   if (asPath) {
@@ -37,4 +37,4 @@ export const initStore: MakeStore<State> = (context) => {
   return store
 
 }
-export const wrapper = createWrapper(initStore)
+export const wrapper = createWrapper<State>(initStore, { debug: true })
